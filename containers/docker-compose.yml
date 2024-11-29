@@ -1,0 +1,46 @@
+
+services:
+  postgres:
+    image: postgres:alpine
+    container_name: postgres_storelink
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - storelink_db:/var/lib/postgres/data
+    networks:
+      - storelink
+  nestjs:
+    build:
+      context: ../
+      dockerfile: ./containers/nestjs/Dockerfile
+    image: nestjs:storelink
+    container_name: nestjs_storelink
+    restart: always
+    environment:
+      - PORT=${PORT}
+    volumes:
+      - nestjs_volume:/usr/backend
+      - /usr/backend/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - storelink
+    ports:
+      - "${PORT}:${PORT}"
+
+networks:
+  storelink:
+    driver: bridge
+    name: storelink
+
+volumes:
+  storelink_db:
+  nestjs_volume:
+    name: nestjs_volume
+    driver: local
+    driver_opts:
+      type: none
+      device: ../backend
+      o: bind
