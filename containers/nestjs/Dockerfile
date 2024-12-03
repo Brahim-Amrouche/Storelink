@@ -5,5 +5,7 @@ COPY ./backend/package.json ./
 
 RUN npm install
 # RUN nvm install 22 && npm install
+COPY --chmod=744 ./containers/nestjs/runserver.bash /usr
 
-CMD ["npm", "run", "start:dev"] 
+
+CMD ["/usr/runserver.bash"] 

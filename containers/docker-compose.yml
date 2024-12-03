@@ -1,4 +1,3 @@
-
 services:
   postgres:
     image: postgres:alpine
@@ -8,9 +7,23 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - storelink_db:/var/lib/postgres/data
+      - storelink_db:/var/lib/postgresql/data
     networks:
       - storelink
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_storelink
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} # Your login email for pgAdmin
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} # Your login password
+    volumes:
+      - storelink_pgadmin:/var/lib/pgadmin
+    networks:
+      - storelink
+    ports:
+      - "5050:80"
   nestjs:
     build:
       context: ../
@@ -20,6 +33,9 @@ services:
     restart: always
     environment:
       - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_PUBLIC=${JWT_PUBLIC}
     volumes:
       - nestjs_volume:/usr/backend
       - /usr/backend/node_modules
@@ -37,6 +53,7 @@ networks:
 
 volumes:
   storelink_db:
+  storelink_pgadmin:
   nestjs_volume:
     name: nestjs_volume
     driver: local
