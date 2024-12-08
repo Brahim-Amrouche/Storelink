@@ -23,7 +23,7 @@ services:
     networks:
       - storelink
     ports:
-      - "5050:80"
+      - "9000:80"
   nestjs:
     build:
       context: ../

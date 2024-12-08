@@ -2,7 +2,14 @@ import {Injectable, CanActivate, ExecutionContext} from "@nestjs/common"
 import {Request} from "express"
 import * as jose from "jose"
 import prisma from "@src/prisma"
-import {JWTPUBLICKEY} from "@src/main"
+import {User} from "@prisma/client"
+
+export const JWTPUBLICKEY:string=`-----BEGIN PUBLIC KEY-----\n${process.env.JWT_PUBLIC}\n-----END PUBLIC KEY-----`;
+
+export interface AuthRequest extends Request
+{
+	user:  User
+}
 
 @Injectable()
 export class AuthGuard implements CanActivate
@@ -35,3 +42,4 @@ export class AuthGuard implements CanActivate
 		return  this.authenticateUser(request);
 	}
 }
+

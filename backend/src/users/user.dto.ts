@@ -1,4 +1,5 @@
-import {IsString, Length, IsEmail, IsStrongPassword, IsNotEmpty} from "class-validator"
+import {IsString, Length, IsEmail, IsStrongPassword, IsNotEmpty, IsEnum} from "class-validator"
+import {User, UserSex} from "@prisma/client"
 
 export class UserCreateDto
 {
@@ -19,6 +20,10 @@ export class UserCreateDto
 	@IsNotEmpty()
 	@IsStrongPassword()
 	password: string
+
+	@IsNotEmpty()
+	@IsEnum(UserSex)
+	sex: string
 }
 
 export class UserLoginDto

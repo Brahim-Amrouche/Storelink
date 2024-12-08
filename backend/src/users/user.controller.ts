@@ -1,8 +1,9 @@
 import {Controller, Post, Get, Body, Res, Req, BadRequestException, UseGuards} from "@nestjs/common"
 import {UserCreateDto, UserLoginDto} from "@src/users/user.dto"
 import {UserService} from "@src/users/user.service"
-import {Response, Request} from "express"
-import {AuthGuard} from "@src/authGuard"
+import {Response} from "express"
+import {AuthGuard, AuthRequest} from "@src/authGuard"
+import {ErrorMessage} from "@src/error"
 
 @Controller("/users")
 export class UserController
@@ -13,9 +14,9 @@ export class UserController
 	@Post("/login")
 	async login_user(@Body() userLoginData:UserLoginDto, @Res() res: Response)
 	{
-		const userJwt = await this.userService.login_user(userLoginData);
-		if (userJwt === undefined)
-			return new BadRequestException({"message": "couldn't log in", "error_code": 2})
+		const userJwt  = await this.userService.login_user(userLoginData);
+		if (userJwt instanceof ErrorMessage)
+			throw new BadRequestException(userJwt)
 		res.cookie("id_key", userJwt, {
 			"httpOnly": true,
 			"maxAge": 3600000,
@@ -27,14 +28,14 @@ export class UserController
 	@Post("/")
 	async create_user(@Body() userCreateData: UserCreateDto)
 	{
-		return await this.userService.create_user(userCreateData)		
+		return await this.userService.create_user(userCreateData)
 	}
 
 	
 	@Get("/")
 	@UseGuards(AuthGuard)
-	ping_user_service(@Req() req: Request)
+	ping_user_service()
 	{
-		return req['user']
+		return {"message": "ping sucessfull"}
 	}
 }

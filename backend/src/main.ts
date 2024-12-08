@@ -3,8 +3,7 @@ import {ValidationPipe} from "@nestjs/common"
 import { AppModule } from './app.module';
 import * as cookieParser from "cookie-parser"
 
-export const JWTPRIVATEKEY:string = `-----BEGIN PRIVATE KEY-----\n${process.env.JWT_SECRET}\n-----END PRIVATE KEY-----`;
-export const JWTPUBLICKEY:string=`-----BEGIN PUBLIC KEY-----\n${process.env.JWT_PUBLIC}\n-----END PUBLIC KEY-----`;
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
