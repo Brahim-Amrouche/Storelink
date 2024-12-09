@@ -3,6 +3,10 @@ import {Request} from "express"
 import * as jose from "jose"
 import prisma from "@src/prisma"
 import {User} from "@prisma/client"
+import * as dotenv from "dotenv"
+
+dotenv.config({path:"../.env"})
+
 
 export const JWTPUBLICKEY:string=`-----BEGIN PUBLIC KEY-----\n${process.env.JWT_PUBLIC}\n-----END PUBLIC KEY-----`;
 

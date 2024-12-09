@@ -31,7 +31,7 @@ export class UserController
 		return await this.userService.create_user(userCreateData)
 	}
 
-	
+
 	@Get("/")
 	@UseGuards(AuthGuard)
 	ping_user_service()
